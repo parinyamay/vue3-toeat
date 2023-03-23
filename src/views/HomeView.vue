@@ -1,19 +1,28 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
+const restaurantStatusList = ['Want to Try', 'Recommended', 'Do Not Recommend', 'Must Try'] as const
+
+type RecommendStatus = (typeof restaurantStatusList)[number]
+
 interface Restaurant {
-  name: string
-  status: RestaurantStatus
-  dishes: Dish[]
+  name?: string
+  status?: RecommendStatus
+  dishes?: Dish[]
 }
 
-type RestaurantStatus = 'Want to Try' | 'Recommended' | 'Do Not Recommend' | 'Must Try'
+interface Dish {
+  name?: string
+  diet?: Diet
+  status?: RecommendStatus
+}
+
+type Diet = 'vegetarian' | 'vegan' | 'gluten-free' | 'pescatarian' | 'lactose-free' | 'other'
 
 const restaurantList = ref<Restaurant[]>([])
-const newRestaurant = ref<Restaurant>({})
-
-// How to extract valuoe from type
-const statusList = ['Want to Try', 'Recommended', 'Do Not Recommend', 'Must Try']
+const newRestaurant = ref<Restaurant>({
+  status: 'Want to Try'
+})
 
 function addRestaurant() {
   restaurantList.value.push({
@@ -39,7 +48,7 @@ function addRestaurant() {
       <div>
         <label for="restaurant-address">Restaurant Status</label>
         <select name="restaurant-status" id="restaurant-status" v-model="newRestaurant.status">
-          <option v-for="status in statusList" :key="status" :value="status">
+          <option v-for="status in restaurantStatusList" :key="status" :value="status">
             {{ status }}
           </option>
         </select>
@@ -50,7 +59,7 @@ function addRestaurant() {
 
     <ul>
       <li v-for="restaurant in restaurantList" :key="restaurant.name">
-        {{ restaurant.name }}
+        {{ restaurant.name }} - {{ restaurant.status }}
       </li>
     </ul>
   </main>
