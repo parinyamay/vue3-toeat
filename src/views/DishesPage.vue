@@ -1,20 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-
-const restaurantStatusList = ['Want to Try', 'Recommended', 'Do Not Recommend', 'Must Try'] as const
-
-type RecommendStatus = (typeof restaurantStatusList)[number]
-
-interface Dish {
-  name?: string
-  diet?: Diet
-  status?: RecommendStatus
-}
-
-type Diet = 'vegetarian' | 'vegan' | 'gluten-free' | 'pescatarian' | 'lactose-free' | 'other'
-
-// How to extract valuoe from type
-const statusList = ['Want to Try', 'Recommended', 'Do Not Recommend', 'Must Try']
+import type { Dish } from '../type'
+import { restaurantStatusList } from '../constants'
 
 const dishList = ref<Dish[]>([])
 const newDish = ref<Dish>({
@@ -37,14 +24,14 @@ function addDish() {
     <!-- Create a form that allows users to add a restaurant to a list. -->
     <form @submit.prevent="addDish">
       <div>
-        <label for="dish-name">Dish Name</label>
+        <label for="dish-name">Dish Name : </label>
         <input id="dish-name" v-model="newDish.name" type="text" />
       </div>
 
       <div>
-        <label for="dish-address">Dish Status</label>
+        <label for="dish-address">Dish Status : </label>
         <select name="dish-status" id="dish-status" v-model="newDish.status">
-          <option v-for="status in statusList" :key="status" :value="status">
+          <option v-for="status in restaurantStatusList" :key="status" :value="status">
             {{ status }}
           </option>
         </select>
