@@ -4,18 +4,21 @@ import type { Dish, RecommendStatus } from '../type'
 import { restaurantStatusList } from '../constants'
 
 interface Restaurant {
+  id: number
   name?: string
   status?: RecommendStatus
   dishes?: Dish[]
 }
 
+let nextRestaurantId = 0
 const restaurantList = ref<Restaurant[]>([])
-const newRestaurant = ref<Restaurant>({
+const newRestaurant = ref<Omit<Restaurant, 'id'>>({
   status: 'Want to Try'
 })
 
 function addRestaurant() {
   restaurantList.value.push({
+    id: nextRestaurantId++,
     name: newRestaurant.value.name,
     status: newRestaurant.value.status,
     dishes: []
@@ -80,7 +83,7 @@ function statusClass(status?: RecommendStatus) {
       </p>
 
       <TransitionGroup name="list" tag="ul" class="item-list">
-        <li v-for="(restaurant, index) in restaurantList" :key="restaurant.name" class="item-card">
+        <li v-for="(restaurant, index) in restaurantList" :key="restaurant.id" class="item-card">
           <div class="item-content">
             <span class="item-name">{{ restaurant.name }}</span>
             <span :class="['badge', statusClass(restaurant.status)]">{{ restaurant.status }}</span>
