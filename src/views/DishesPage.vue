@@ -3,13 +3,19 @@ import { ref } from 'vue'
 import type { Dish, RecommendStatus } from '../type'
 import { restaurantStatusList } from '../constants'
 
-const dishList = ref<Dish[]>([])
+interface DishWithId extends Dish {
+  id: number
+}
+
+let nextDishId = 0
+const dishList = ref<DishWithId[]>([])
 const newDish = ref<Dish>({
   status: 'Want to Try'
 })
 
 function addDish() {
   dishList.value.push({
+    id: nextDishId++,
     name: newDish.value.name,
     status: newDish.value.status
   })
@@ -71,7 +77,7 @@ function statusClass(status?: RecommendStatus) {
       <p v-if="!dishList.length" class="empty-state">No dishes yet. Add one above to get started.</p>
 
       <TransitionGroup name="list" tag="ul" class="item-list">
-        <li v-for="(dish, index) in dishList" :key="dish.name" class="item-card">
+        <li v-for="(dish, index) in dishList" :key="dish.id" class="item-card">
           <div class="item-content">
             <span class="item-name">{{ dish.name }}</span>
             <span :class="['badge', statusClass(dish.status)]">{{ dish.status }}</span>
